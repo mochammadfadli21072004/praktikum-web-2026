@@ -2,19 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\AboutController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/about', function () {
-    return '
-        <h2>Profil Toko</h2>
-        <p><strong>Nama Toko:</strong> Fadli Store</p>
-        <p><strong>Deskripsi:</strong> Menjual berbagai kebutuhan elektronik dan aksesoris dengan harga terjangkau.</p>
-        <p><strong>Berdiri sejak:</strong> 2024</p>
-    ';
-});
+Route::get('/about', [AboutController::class, 'index']);
 
 Route::post('/submit', function () {
     return 'Form berhasil disubmit (POST)';
@@ -59,4 +53,8 @@ Route::get('/cek-admin', function () {
     return redirect()->route('admin.dashboard');
 });
 
+// Resource lengkap (7 rute CRUD)
 Route::resource('photos', PhotoController::class);
+
+// Resource sebagian - hanya index & show (Materi 2, Pertemuan 3)
+Route::resource('photos-only', PhotoController::class)->only(['index', 'show']);

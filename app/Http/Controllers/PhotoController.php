@@ -3,62 +3,50 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class PhotoController extends Controller
+class PhotoController extends Controller implements HasMiddleware
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
-        //
+        return 'INDEX - Menampilkan daftar semua foto';
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return 'CREATE - Form tambah foto';
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        return 'Data diterima: ' . $request->input('judul', 'tanpa judul');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        return 'SHOW - Menampilkan foto ID: ' . $id;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        return 'EDIT - Form edit foto ID: ' . $id;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        return 'UPDATE - Foto ID ' . $id . ' diperbarui';
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        return 'DESTROY - Foto ID ' . $id . ' dihapus';
     }
 }
