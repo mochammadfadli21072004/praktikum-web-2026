@@ -13,7 +13,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::with('category')->get();
+        $products = Product::with('category')->get();
+
+        // Cara 1: compact()
+        return view('products.index', compact('products'));
     }
 
     /**
@@ -37,7 +40,10 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-         return Product::with('category')->findOrFail($id);
+        $product = Product::with('category')->findOrFail($id);
+
+        // Cara 2: ->with()
+        return view('products.show')->with('product', $product);
     }
 
     /**

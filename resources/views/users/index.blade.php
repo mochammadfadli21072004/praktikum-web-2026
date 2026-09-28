@@ -1,57 +1,59 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Kelola Akun Kasir</title>
-</head>
-<body>
+@extends('layouts.app')
 
-    <h2>Kelola Akun Kasir</h2>
-    <p><a href="/dashboard">&larr; Dashboard</a></p>
+@section('title', 'Kelola Akun Kasir')
 
-    @if (session('status'))
-        <p style="color:green">{{ session('status') }}</p>
-    @endif
+@section('content')
+    <h3 class="mb-3">Kelola Akun Kasir</h3>
 
-    @if ($errors->any())
-        <ul style="color:red">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Tambah Kasir</h5>
+            <form action="{{ url('/users') }}" method="POST" class="row g-2">
+                @csrf
+                <div class="col-md-3">
+                    <input type="text" name="name" value="{{ old('name') }}" class="form-control" placeholder="Nama">
+                </div>
+                <div class="col-md-4">
+                    <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="Email">
+                </div>
+                <div class="col-md-3">
+                    <input type="password" name="password" class="form-control" placeholder="Password (min. 8)">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <h3>Tambah Kasir</h3>
-    <form action="/users" method="POST">
-        @csrf
-        <input type="text" name="name" value="{{ old('name') }}" placeholder="Nama">
-        <input type="email" name="email" value="{{ old('email') }}" placeholder="Email">
-        <input type="password" name="password" placeholder="Password (min. 8)">
-        <button type="submit">Simpan</button>
-    </form>
-
-    <h3>Daftar Kasir</h3>
-    <table border="1" cellpadding="6">
-        <tr>
-            <th>Nama</th>
-            <th>Email</th>
-            <th>Aksi</th>
-        </tr>
-        @forelse ($kasirs as $kasir)
+    <h5>Daftar Kasir</h5>
+    <table class="table table-bordered bg-white">
+        <thead class="table-light">
             <tr>
-                <td>{{ $kasir->name }}</td>
-                <td>{{ $kasir->email }}</td>
-                <td>
-                    <form action="/users/{{ $kasir->id }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">Hapus</button>
-                    </form>
-                </td>
+                <th style="width:60px">No</th>
+                <th>Nama</th>
+                <th>Email</th>
+                <th style="width:120px">Aksi</th>
             </tr>
-        @empty
-            <tr><td colspan="3">Belum ada akun kasir.</td></tr>
-        @endforelse
+        </thead>
+        <tbody>
+            @forelse ($kasirs as $kasir)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $kasir->name }}</td>
+                    <td>{{ $kasir->email }}</td>
+                    <td>
+                        <form action="{{ url('/users/' . $kasir->id) }}" method="POST"
+                              onsubmit="return confirm('Hapus akun ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr><td colspan="4" class="text-center text-muted">Belum ada akun kasir.</td></tr>
+            @endforelse
+        </tbody>
     </table>
-
-</body>
-</html>
+@endsection

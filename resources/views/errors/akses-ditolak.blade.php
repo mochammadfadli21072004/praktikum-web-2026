@@ -1,13 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Akses Ditolak</title>
-</head>
-<body style="font-family: sans-serif; text-align: center; margin-top: 80px;">
+@extends('layouts.app')
 
-    <h1>Akses Ditolak</h1>
-    <p>Akun Anda berperan <strong>{{ $role }}</strong>, sedangkan halaman ini khusus <strong>{{ $dibutuhkan }}</strong>.</p>
-    <p><a href="/dashboard">Kembali ke Dashboard</a></p>
+@section('title', 'Akses Ditolak')
 
-</body>
-</html>
+@section('content')
+    <div class="text-center mt-5">
+        <h1 class="display-5">403 - Akses Ditolak</h1>
+        <p>
+            Akun Anda berperan <strong>{{ $role }}</strong>,
+            sedangkan halaman ini khusus <strong>{{ $dibutuhkan }}</strong>.
+        </p>
+        <a href="{{ url('/dashboard') }}" class="btn btn-primary">Kembali ke Dashboard</a>
+    </div>
+@endsection

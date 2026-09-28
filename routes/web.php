@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Models\Category;
+use App\Models\Product;
 
 Route::get('/', function () {
     return view('welcome');
@@ -76,8 +77,17 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    // Cara 3: array asosiatif
+    return view('dashboard', [
+        'totalProduk' => Product::count(),
+        'totalKategori' => Category::count(),
+    ]);
 })->middleware('auth');
+
+// Khusus kasir (isi halamannya menyusul)
+Route::get('/riwayat-transaksi', function () {
+    return 'Riwayat Transaksi Kasir (belum dibuat)';
+})->name('pos.history')->middleware(['auth', 'role:kasir']);
 
 // Khusus admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
