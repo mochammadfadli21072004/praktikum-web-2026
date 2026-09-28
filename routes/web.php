@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -58,3 +59,6 @@ Route::resource('photos', PhotoController::class);
 
 // Resource sebagian - hanya index & show (Materi 2, Pertemuan 3)
 Route::resource('photos-only', PhotoController::class)->only(['index', 'show']);
+
+Route::get('/products/laporan', [ProductController::class, 'laporan']);
+Route::resource('products', ProductController::class)->only(['index', 'show']);
