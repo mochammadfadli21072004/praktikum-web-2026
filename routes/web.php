@@ -67,13 +67,18 @@ Route::resource('photos-only', PhotoController::class)->only(['index', 'show']);
 Route::get('/products/laporan', [ProductController::class, 'laporan']);
 Route::resource('products', ProductController::class)->only(['index', 'show']);
 
+// Edit/hapus produk: wajib login; izin admin dicek oleh ProductPolicy
+Route::middleware('auth')->group(function () {
+    Route::resource('products', ProductController::class)->only(['edit', 'update', 'destroy']);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Login, Role & Middleware (CheckRole)
 |--------------------------------------------------------------------------
 */
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
-Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
+Route::post('/login', [AuthController::class, 'login'])->middleware(['guest', 'throttle:5,1']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::get('/dashboard', function () {

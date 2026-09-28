@@ -13,7 +13,7 @@
                 <th>Kategori</th>
                 <th class="text-end">Harga</th>
                 <th>Stok</th>
-                <th style="width:90px">Aksi</th>
+                <th style="width:220px">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +27,19 @@
                     <td>{{ $product->stock }} <x-badge :stok="$product->stock" /></td>
                     <td>
                         <a href="{{ url('/products/' . $product->id) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+
+                        @can('update', $product)
+                            <a href="{{ url('/products/' . $product->id . '/edit') }}" class="btn btn-sm btn-outline-warning">Edit</a>
+                        @endcan
+
+                        @can('delete', $product)
+                            <form action="{{ url('/products/' . $product->id) }}" method="POST" class="d-inline"
+                                  onsubmit="return confirm('Hapus produk ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @empty

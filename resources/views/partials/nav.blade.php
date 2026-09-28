@@ -12,17 +12,17 @@
                     <a class="nav-link" href="{{ url('/dashboard') }}">Dashboard</a>
                 </li>
 
-                @if (auth()->user()->role === 'admin')
+                @can('kelola-user')
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/users') }}">Kelola Kasir</a>
                     </li>
-                @endif
+                @endcan
 
-                @if (auth()->user()->role === 'kasir')
+                @can('lihat-riwayat')
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('pos.history') }}">Riwayat Transaksi Saya</a>
                     </li>
-                @endif
+                @endcan
             @endauth
         </ul>
 

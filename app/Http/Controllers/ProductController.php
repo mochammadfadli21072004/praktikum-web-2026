@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
@@ -51,7 +52,12 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $this->authorize('update', $product);   // 403 jika bukan admin
+
+        $categories = Category::orderBy('name')->get();
+
+        return view('products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -59,7 +65,19 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $this->authorize('update', $product);
+
+        $data = $request->validate([
+            'name'  => ['required', 'max:100'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'category_id' => ['required', 'exists:categories,id'],
+        ]);
+
+        $product->update($data);
+
+        return redirect('/products')->with('status', 'Produk berhasil diperbarui.');
     }
 
     /**
@@ -67,7 +85,12 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $this->authorize('delete', $product);
+
+        $product->delete();
+
+        return redirect('/products')->with('status', 'Produk dihapus.');
     }
 
     public function laporan()
