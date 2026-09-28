@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+use App\Models\Category;
 
 Route::get('/', function () {
     return view('welcome');
@@ -62,3 +65,25 @@ Route::resource('photos-only', PhotoController::class)->only(['index', 'show']);
 
 Route::get('/products/laporan', [ProductController::class, 'laporan']);
 Route::resource('products', ProductController::class)->only(['index', 'show']);
+
+/*
+|--------------------------------------------------------------------------
+| Login, Role & Middleware (CheckRole)
+|--------------------------------------------------------------------------
+*/
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
+Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware('auth');
+
+// Khusus admin
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/categories', function () {
+        return Category::withCount('products')->get();
+    });
+
+    Route::resource('users', UserController::class)->only(['index', 'store', 'destroy']);
+});
