@@ -1,0 +1,391 @@
+{
+  "info": {
+    "name": "Praktikum 7 - API Produk",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api"
+    }
+  ],
+  "item": [
+    {
+      "name": "v1",
+      "item": [
+        {
+          "name": "Daftar produk",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5 produk terbaru",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/products/latest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "products",
+                "latest"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detail produk",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/products/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "products",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buat produk (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "products"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kopi Susu\",\n  \"description\": \"Kopi susu gula aren\",\n  \"price\": 15000,\n  \"stock\": 10,\n  \"category_id\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Buat produk invalid (422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ubah produk",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/products/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "products",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kopi Susu Besar\",\n  \"price\": 18000\n}"
+            }
+          }
+        },
+        {
+          "name": "Hapus produk (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/products/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "products",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Produk tidak ada (404)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/products/999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "products",
+                "999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Daftar kategori",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "categories"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detail kategori",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/categories/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "categories",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "v2",
+      "item": [
+        {
+          "name": "Daftar produk v2",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v2/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v2",
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter + sort v2",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v2/products?search=a&category_id=1&sort=price_desc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v2",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "a"
+                },
+                {
+                  "key": "category_id",
+                  "value": "1"
+                },
+                {
+                  "key": "sort",
+                  "value": "price_desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detail produk v2",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v2/products/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v2",
+                "products",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
