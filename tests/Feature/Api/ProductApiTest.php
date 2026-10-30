@@ -42,6 +42,18 @@ class ProductApiTest extends TestCase
             ->assertJsonValidationErrors(['name', 'price', 'category_id']);
     }
 
+    public function test_v1_store_stock_null_ditolak_422_bukan_500(): void
+    {
+        $category = Category::factory()->create();
+
+        $this->postJson('/api/v1/products', [
+            'name' => 'Teh Manis',
+            'price' => 5000,
+            'stock' => null,
+            'category_id' => $category->id,
+        ])->assertStatus(422)->assertJsonValidationErrors(['stock']);
+    }
+
     public function test_v1_show_tidak_ada_mengembalikan_404_json(): void
     {
         $this->getJson('/api/v1/products/999')->assertNotFound();

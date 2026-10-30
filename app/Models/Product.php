@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PriceFormatter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +25,7 @@ class Product extends Model
     protected function formattedPrice(): Attribute
     {
         return Attribute::get(
-            fn () => 'Rp ' . number_format((float) $this->price, 0, ',', '.')
+            fn () => PriceFormatter::rupiah($this->price)
         );
     }
 }

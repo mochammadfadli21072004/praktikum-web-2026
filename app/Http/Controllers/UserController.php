@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $kasirs = User::where('role', 'kasir')->orderBy('name')->get();
+        $kasirs = User::where('role', User::ROLE_KASIR)->orderBy('name')->get();
 
         return view('users.index', compact('kasirs'));
     }
@@ -22,9 +22,9 @@ class UserController extends Controller
             'password' => ['required', 'min:8'],
         ]);
 
-        // Role diisi manual, bukan dari input form, supaya tidak bisa dimanipulasi
+        // Role diisi manual menggunakan konstanta, bukan dari input form, agar tidak bisa dimanipulasi
         $user = new User($data);
-        $user->role = 'kasir';
+        $user->role = User::ROLE_KASIR;
         $user->save();
 
         return redirect()->route('users.index')->with('status', 'Akun kasir berhasil dibuat.');
@@ -32,7 +32,7 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
-        User::where('role', 'kasir')->findOrFail($id)->delete();
+        User::where('role', User::ROLE_KASIR)->findOrFail($id)->delete();
 
         return redirect()->route('users.index')->with('status', 'Akun kasir dihapus.');
     }

@@ -2,37 +2,33 @@
 
 namespace App\View\Components;
 
+use App\Enums\StockStatus;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class Badge extends Component
 {
+    private StockStatus $status;
+
     /**
      * Pemakaian: <x-badge :stok="$product->stock" />
      */
     public function __construct(public int $stok = 0)
     {
+        $this->status = StockStatus::fromQuantity($this->stok);
     }
 
-    /** Teks status: Habis (0), Menipis (1-10), Aman (>10) */
+    /** Teks status dari satu sumber aturan StockStatus */
     public function teks(): string
     {
-        return match (true) {
-            $this->stok <= 0  => 'Habis',
-            $this->stok <= 10 => 'Menipis',
-            default           => 'Aman',
-        };
+        return $this->status->label();
     }
 
     /** Warna Bootstrap sesuai status */
     public function kelas(): string
     {
-        return match (true) {
-            $this->stok <= 0  => 'text-bg-danger',
-            $this->stok <= 10 => 'text-bg-warning',
-            default           => 'text-bg-success',
-        };
+        return $this->status->badgeClass();
     }
 
     public function render(): View|Closure|string

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V2;
 
+use App\Enums\StockStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,11 +25,7 @@ class ProductResource extends JsonResource
             ],
             'stock' => [
                 'quantity' => $this->stock,
-                'status' => match (true) {
-                    $this->stock === 0 => 'habis',
-                    $this->stock <= 5 => 'menipis',
-                    default => 'tersedia',
-                },
+                'status' => StockStatus::fromQuantity((int) $this->stock)->value,
             ],
             'category' => $this->whenLoaded('category', fn () => $this->category?->name),
             'links' => [

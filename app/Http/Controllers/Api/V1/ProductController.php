@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ProductRequest;
 use App\Http\Resources\V1\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
@@ -40,17 +40,9 @@ class ProductController extends Controller
      * @response 201 {"data": {"id": 16, "name": "Kopi Susu", "price": 15000, "stock": 10}}
      * @response 422 {"message": "The name field is required.", "errors": {"name": ["The name field is required."]}}
      */
-    public function store(Request $request): JsonResponse
+    public function store(ProductRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:100'],
-            'description' => ['nullable', 'string'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'stock' => ['nullable', 'integer', 'min:0'],
-            'category_id' => ['required', 'exists:categories,id'],
-        ]);
-
-        $product = Product::create($data)->load('category');
+        $product = Product::create($request->validated())->load('category');
 
         return (new ProductResource($product))
             ->response()
@@ -75,17 +67,9 @@ class ProductController extends Controller
      * @bodyParam name string Nama produk. Example: Kopi Susu Besar
      * @bodyParam price number Harga. Example: 18000
      */
-    public function update(Request $request, Product $product): ProductResource
+    public function update(ProductRequest $request, Product $product): ProductResource
     {
-        $data = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:100'],
-            'description' => ['sometimes', 'nullable', 'string'],
-            'price' => ['sometimes', 'required', 'numeric', 'min:0'],
-            'stock' => ['sometimes', 'required', 'integer', 'min:0'],
-            'category_id' => ['sometimes', 'required', 'exists:categories,id'],
-        ]);
-
-        $product->update($data);
+        $product->update($request->validated());
 
         return new ProductResource($product->load('category'));
     }

@@ -17,6 +17,19 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_KASIR = 'kasir';
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isKasir(): bool
+    {
+        return $this->role === self::ROLE_KASIR;
+    }
+
     /**
      * Get the attributes that should be cast.
      *

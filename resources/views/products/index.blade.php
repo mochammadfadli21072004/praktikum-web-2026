@@ -3,7 +3,15 @@
 @section('title', 'Daftar Produk')
 
 @section('content')
-    <h3 class="mb-3">Daftar Produk</h3>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Daftar Produk</h3>
+        <div>
+            <a href="{{ url('/products/laporan') }}" class="btn btn-sm btn-outline-secondary me-1">Laporan Kategori</a>
+            @can('create', \App\Models\Product::class)
+                <a href="{{ route('products.create') }}" class="btn btn-sm btn-primary">+ Tambah Produk</a>
+            @endcan
+        </div>
+    </div>
 
     <table class="table table-striped table-bordered bg-white">
         <thead class="table-light">
@@ -14,6 +22,7 @@
                 <th class="text-end">Harga</th>
                 <th>Stok</th>
                 <th style="width:220px">Aksi</th>
+                <th>Gambar</th>
             </tr>
         </thead>
         <tbody>
@@ -26,14 +35,14 @@
                     <td class="text-end">@rupiah($product->price)</td>
                     <td>{{ $product->stock }} <x-badge :stok="$product->stock" /></td>
                     <td>
-                        <a href="{{ url('/products/' . $product->id) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+                        <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-outline-primary">Detail</a>
 
                         @can('update', $product)
-                            <a href="{{ url('/products/' . $product->id . '/edit') }}" class="btn btn-sm btn-outline-warning">Edit</a>
+                            <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-outline-warning">Edit</a>
                         @endcan
 
                         @can('delete', $product)
-                            <form action="{{ url('/products/' . $product->id) }}" method="POST" class="d-inline"
+                            <form action="{{ route('products.destroy', $product) }}" method="POST" class="d-inline"
                                   onsubmit="return confirm('Hapus produk ini?')">
                                 @csrf
                                 @method('DELETE')
@@ -41,9 +50,16 @@
                             </form>
                         @endcan
                     </td>
+                    <td>
+                        @if ($product->image)
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="height: 50px;">
+                        @else
+                            -
+                        @endif
+                    </td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="text-center text-muted">Belum ada produk.</td></tr>
+                <tr><td colspan="7" class="text-center text-muted">Belum ada produk.</td></tr>
             @endforelse
         </tbody>
     </table>

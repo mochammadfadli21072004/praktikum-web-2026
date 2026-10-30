@@ -7,26 +7,18 @@ use App\Models\User;
 
 class ProductPolicy
 {
-    /** Semua orang boleh melihat daftar & detail produk. */
-    public function viewAny(?User $user): bool
+    public function create(User $user): bool
     {
-        return true;
+        return $user->isAdmin();
     }
 
-    public function view(?User $user, Product $product): bool
-    {
-        return true;
-    }
-
-    /** Hanya admin yang boleh mengubah produk. */
     public function update(User $user, Product $product): bool
     {
-        return $user->role === 'admin';
+        return $user->isAdmin();
     }
 
-    /** Hanya admin yang boleh menghapus produk. */
     public function delete(User $user, Product $product): bool
     {
-        return $user->role === 'admin';
+        return $user->isAdmin();
     }
 }

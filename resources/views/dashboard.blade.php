@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    @if (auth()->user()->role === 'admin')
+    @if (auth()->user()->isAdmin())
         <x-alert type="info">
             Anda login sebagai <strong>admin</strong>. Menu
             <a href="{{ url('/users') }}">Kelola Kasir</a> dan

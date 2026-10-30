@@ -2,109 +2,107 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Http\Requests\ProductRequest;
 use App\Models\Category;
-use Illuminate\Support\Facades\DB;
+use App\Models\Product;
+use App\Services\ProductImageService;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(
+        private ProductImageService $images
+    ) {
+    }
+
     public function index()
     {
-        $products = Product::with('category')->get();
+        $products = Product::with('category')->latest()->get();
 
-        // Cara 1: compact()
         return view('products.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $this->authorize('create', Product::class);
+        $categories = $this->categoryOptions();
+
+        return view('products.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->images->store($request->file('image'));
+        }
+
+        Product::create($data);
+
+        return redirect()->route('products.index')
+            ->with('status', 'Produk berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        $product = Product::with('category')->findOrFail($id);
+        $product->load('category');
 
-        // Cara 2: ->with()
-        return view('products.show')->with('product', $product);
+        return view('products.show', compact('product'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        $product = Product::findOrFail($id);
-        $this->authorize('update', $product);   // 403 jika bukan admin
-
-        $categories = Category::orderBy('name')->get();
+        $this->authorize('update', $product);
+        $categories = $this->categoryOptions();
 
         return view('products.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request, Product $product)
     {
-        $product = Product::findOrFail($id);
-        $this->authorize('update', $product);
+        $data = $request->validated();
 
-        $data = $request->validate([
-            'name'  => ['required', 'max:100'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'stock' => ['required', 'integer', 'min:0'],
-            'category_id' => ['required', 'exists:categories,id'],
-        ]);
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->images->replace($product->image, $request->file('image'));
+        } else {
+            unset($data['image']);
+        }
 
         $product->update($data);
 
-        return redirect('/products')->with('status', 'Produk berhasil diperbarui.');
+        return redirect()->route('products.index')
+            ->with('status', 'Produk berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        $product = Product::findOrFail($id);
         $this->authorize('delete', $product);
 
+        $this->images->delete($product->image);
         $product->delete();
 
-        return redirect('/products')->with('status', 'Produk dihapus.');
+        return redirect()->route('products.index')
+            ->with('status', 'Produk berhasil dihapus.');
     }
 
     public function laporan()
-{
-    return [
-        'total_produk' => Product::count(),
-        'harga_tertinggi' => Product::max('price'),
-        'produk_mahal' => Product::where('price', '>', 50000)->orderBy('price', 'desc')->limit(5)->get(),
-        'produk_per_kategori' => DB::table('products')
-            ->join('categories', 'categories.id', '=', 'products.category_id')
-            ->select('categories.name as kategori', DB::raw('count(*) as jumlah'))
-            ->groupBy('categories.name')
-            ->get(),
-    ];
-}
-}
+    {
+        $laporan = Category::query()
+            ->select('categories.id', 'categories.name as kategori')
+            ->withCount('products as jumlah')
+            ->withSum('products as total_stok', 'stock')
+            ->orderBy('name')
+            ->get();
 
+        return view('products.laporan', compact('laporan'));
+    }
+
+    /**
+     * Extract Method: pilihan kategori terurut dipakai bersama oleh create() & edit().
+     */
+    private function categoryOptions(): Collection
+    {
+        return Category::orderBy('name')->get();
+    }
+}
