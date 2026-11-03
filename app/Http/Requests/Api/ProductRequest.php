@@ -22,11 +22,11 @@ class ProductRequest extends FormRequest
         $wajib = $this->isMethod('POST') ? ['required'] : ['sometimes', 'required'];
 
         return [
-            'name'        => [...$wajib, 'string', 'max:100'],
-            'description' => ['sometimes', 'nullable', 'string'],
-            'price'       => [...$wajib, 'numeric', 'min:0'],
+            'name' => [...$wajib, 'string', 'max:100'],
+            'description' => ['sometimes', 'nullable', 'string', 'max:2000'],
+            'price' => [...$wajib, 'numeric', 'min:0', 'max:99999999.99'],
             // Tidak dikirim = default database (0). Dikirim null = ditolak 422 (sebelumnya jadi error 500).
-            'stock'       => ['sometimes', 'integer', 'min:0'],
+            'stock' => ['sometimes', 'integer', 'min:0', 'max:1000000'],
             'category_id' => [...$wajib, 'exists:categories,id'],
         ];
     }

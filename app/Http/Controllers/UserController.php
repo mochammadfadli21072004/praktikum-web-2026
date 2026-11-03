@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserStoreRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -14,16 +14,10 @@ class UserController extends Controller
         return view('users.index', compact('kasirs'));
     }
 
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'max:100'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'min:8'],
-        ]);
-
         // Role diisi manual menggunakan konstanta, bukan dari input form, agar tidak bisa dimanipulasi
-        $user = new User($data);
+        $user = new User($request->validated());
         $user->role = User::ROLE_KASIR;
         $user->save();
 

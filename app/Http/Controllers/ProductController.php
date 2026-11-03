@@ -12,8 +12,7 @@ class ProductController extends Controller
 {
     public function __construct(
         private ProductImageService $images
-    ) {
-    }
+    ) {}
 
     public function index()
     {

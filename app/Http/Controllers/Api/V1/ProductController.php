@@ -20,6 +20,7 @@ class ProductController extends Controller
      * Daftar produk.
      *
      * @queryParam page int Halaman ke berapa. Example: 1
+     *
      * @response 200 {"data": [{"id": 1, "name": "Kopi Susu", "price": 15000, "formatted_price": "Rp 15.000", "stock": 10, "category": {"id": 1, "name": "Minuman"}}], "links": {}, "meta": {}}
      */
     public function index()
@@ -37,6 +38,7 @@ class ProductController extends Controller
      * @bodyParam price number required Harga (>= 0). Example: 15000
      * @bodyParam stock integer Stok (>= 0). Example: 10
      * @bodyParam category_id integer required ID kategori yang ada. Example: 1
+     *
      * @response 201 {"data": {"id": 16, "name": "Kopi Susu", "price": 15000, "stock": 10}}
      * @response 422 {"message": "The name field is required.", "errors": {"name": ["The name field is required."]}}
      */
@@ -53,6 +55,7 @@ class ProductController extends Controller
      * Detail satu produk.
      *
      * @urlParam product integer required ID produk. Example: 1
+     *
      * @response 404 {"message": "No query results for model [App\\Models\\Product] 999"}
      */
     public function show(Product $product): ProductResource
@@ -64,6 +67,7 @@ class ProductController extends Controller
      * Ubah produk (PUT/PATCH, field boleh sebagian).
      *
      * @urlParam product integer required ID produk. Example: 1
+     *
      * @bodyParam name string Nama produk. Example: Kopi Susu Besar
      * @bodyParam price number Harga. Example: 18000
      */
@@ -78,6 +82,7 @@ class ProductController extends Controller
      * Hapus produk.
      *
      * @urlParam product integer required ID produk. Example: 1
+     *
      * @response 204 scenario="berhasil" {}
      */
     public function destroy(Product $product): Response

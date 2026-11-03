@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 class ProductImageService
 {
     private const DISK = 'public';
+
     private const DIRECTORY = 'products';
 
     public function store(UploadedFile $file): string

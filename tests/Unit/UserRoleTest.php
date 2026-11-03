@@ -9,7 +9,7 @@ class UserRoleTest extends TestCase
 {
     public function test_admin_dikenali_sebagai_admin(): void
     {
-        $user = new User();
+        $user = new User;
         $user->role = User::ROLE_ADMIN;
 
         $this->assertTrue($user->isAdmin());
@@ -18,7 +18,7 @@ class UserRoleTest extends TestCase
 
     public function test_kasir_bukan_admin(): void
     {
-        $user = new User();
+        $user = new User;
         $user->role = User::ROLE_KASIR;
 
         $this->assertTrue($user->isKasir());

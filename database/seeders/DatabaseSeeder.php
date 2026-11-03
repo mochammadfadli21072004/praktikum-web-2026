@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,14 +21,19 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // BARU: dua akun, password keduanya "password"
-        User::factory()->admin()->create([
+        $admin = User::factory()->admin()->create([
             'name' => 'Admin Toko',
             'email' => 'admin@example.com',
         ]);
 
-        User::factory()->create([
+        $kasir = User::factory()->create([
             'name' => 'Kasir Satu',
             'email' => 'kasir@example.com',
         ]);
+
+        // Data contoh Mini Project Task Manager
+        Task::factory()->count(3)->for($admin)->create();
+        Task::factory()->count(2)->for($kasir)->create();
+        Task::factory()->completed()->for($kasir)->create();
     }
 }

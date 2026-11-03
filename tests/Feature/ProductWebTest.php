@@ -108,7 +108,7 @@ class ProductWebTest extends TestCase
             'image' => UploadedFile::fake()->image('teh.png'),
         ]))->assertRedirect(route('products.index'));
 
-        Storage::disk('public')->assertExists(Product::first()->image);
+        $this->assertTrue(Storage::disk('public')->exists(Product::first()->image));
     }
 
     public function test_data_tidak_valid_ditolak_dengan_pesan_error(): void

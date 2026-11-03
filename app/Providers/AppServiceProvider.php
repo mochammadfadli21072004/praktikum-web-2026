@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Directive kustom: @rupiah($angka) => Rp 1.250.000
         Blade::directive('rupiah', function ($expression) {
-            return "<?php echo \\" . PriceFormatter::class . "::rupiah($expression); ?>";
+            return '<?php echo \\'.PriceFormatter::class."::rupiah($expression); ?>";
         });
 
         // ---- Gates (Pertemuan 6): aturan otorisasi sederhana ----

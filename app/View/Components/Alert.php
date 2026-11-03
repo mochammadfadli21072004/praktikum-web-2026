@@ -11,9 +11,7 @@ class Alert extends Component
     /**
      * Properti public otomatis menjadi atribut Blade: <x-alert type="error">
      */
-    public function __construct(public string $type = 'info')
-    {
-    }
+    public function __construct(public string $type = 'info') {}
 
     /**
      * Ubah tipe (success/error/warning/info) jadi kelas warna Bootstrap.
@@ -22,9 +20,9 @@ class Alert extends Component
     {
         return match ($this->type) {
             'success' => 'alert-success',
-            'error'   => 'alert-danger',
+            'error' => 'alert-danger',
             'warning' => 'alert-warning',
-            default   => 'alert-info',
+            default => 'alert-info',
         };
     }
 

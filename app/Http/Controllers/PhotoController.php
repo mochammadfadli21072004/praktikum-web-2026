@@ -27,26 +27,27 @@ class PhotoController extends Controller implements HasMiddleware
 
     public function store(Request $request)
     {
-        return 'Data diterima: ' . $request->input('judul', 'tanpa judul');
+        // e() = htmlspecialchars: input pengguna di-escape sebelum dikirim balik (cegah XSS)
+        return 'Data diterima: '.e($request->input('judul', 'tanpa judul'));
     }
 
     public function show($id)
     {
-        return 'SHOW - Menampilkan foto ID: ' . $id;
+        return 'SHOW - Menampilkan foto ID: '.$id;
     }
 
     public function edit($id)
     {
-        return 'EDIT - Form edit foto ID: ' . $id;
+        return 'EDIT - Form edit foto ID: '.$id;
     }
 
     public function update(Request $request, $id)
     {
-        return 'UPDATE - Foto ID ' . $id . ' diperbarui';
+        return 'UPDATE - Foto ID '.$id.' diperbarui';
     }
 
     public function destroy($id)
     {
-        return 'DESTROY - Foto ID ' . $id . ' dihapus';
+        return 'DESTROY - Foto ID '.$id.' dihapus';
     }
 }

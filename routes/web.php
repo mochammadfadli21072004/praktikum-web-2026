@@ -1,13 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\AboutController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
-use App\Models\Category;
-use App\Models\Product;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,11 +25,11 @@ Route::get('/submit-test', function () {
 });
 
 Route::get('/user/{id}', function ($id) {
-    return 'User dengan ID: ' . $id;
+    return 'User dengan ID: '.$id;
 })->where('id', '[0-9]+');
 
 Route::get('/hello/{name?}', function ($name = 'Tamu') {
-    return 'Halo, ' . $name . '!';
+    return 'Halo, '.$name.'!';
 });
 
 Route::get('/akun-saya', function () {
@@ -53,8 +54,9 @@ Route::get('/cek-admin', function () {
     return redirect()->route('admin.dashboard');
 });
 
-Route::resource('photos', PhotoController::class);
-Route::resource('photos-only', PhotoController::class)->only(['index', 'show']);
+// whereNumber: parameter {photo} hanya boleh angka, input aneh (mis. <script>) ditolak 404 di level routing
+Route::resource('photos', PhotoController::class)->whereNumber('photo');
+Route::resource('photos-only', PhotoController::class)->only(['index', 'show'])->whereNumber('photos_only');
 
 // ===== PRODUCTS =====
 Route::get('/products/laporan', [ProductController::class, 'laporan']);
@@ -72,21 +74,20 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middl
 Route::post('/login', [AuthController::class, 'login'])->middleware(['guest', 'throttle:5,1']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
-Route::get('/dashboard', function () {
-    return view('dashboard', [
-        'totalProduk' => Product::count(),
-        'totalKategori' => Category::count(),
-    ]);
-})->middleware('auth');
+Route::get('/dashboard', DashboardController::class)->middleware('auth');
 
 Route::get('/riwayat-transaksi', function () {
     return 'Riwayat Transaksi Kasir (belum dibuat)';
 })->name('pos.history')->middleware(['auth', 'role:kasir']);
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/categories', function () {
-        return Category::withCount('products')->get();
-    });
+    Route::get('/categories', [CategoryController::class, 'index']);
 
     Route::resource('users', UserController::class)->only(['index', 'store', 'destroy']);
+});
+
+// ===== MINI PROJECT: TASK MANAGER (Pertemuan 12) =====
+Route::middleware('auth')->group(function () {
+    Route::patch('/tasks/{task}/complete', [TaskController::class, 'toggleComplete'])->name('tasks.complete');
+    Route::resource('tasks', TaskController::class)->except(['show']);
 });

@@ -12,6 +12,10 @@
                     <a class="nav-link" href="{{ url('/dashboard') }}">Dashboard</a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('tasks.index') }}">Tugas Saya</a>
+                </li>
+
                 @can('kelola-user')
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/users') }}">Kelola Kasir</a>

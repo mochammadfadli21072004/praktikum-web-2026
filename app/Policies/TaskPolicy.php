@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Task;
+use App\Models\User;
+
+/**
+ * Aturan tunggal tahap 1: tugas hanya boleh dikelola oleh pemiliknya.
+ */
+class TaskPolicy
+{
+    public function update(User $user, Task $task): bool
+    {
+        return $task->user_id === $user->id;
+    }
+
+    public function delete(User $user, Task $task): bool
+    {
+        return $this->update($user, $task);
+    }
+}
